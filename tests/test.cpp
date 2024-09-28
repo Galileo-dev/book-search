@@ -1,24 +1,16 @@
+#include "test_declarations.h"
+#include "test_utils.h"
 #include <iostream>
 
-// Function to test
-bool function1(int a) {
-    return a > 5;   
-}
+bool greater_than_five(int a) { return a > 5; }
 
-// If parameter is not true, test fails
-// This check function would be provided by the test framework
-#define IS_TRUE(x) { if (!(x)) std::cout << __FUNCTION__ << " failed on line " << __LINE__ << std::endl; }
-
-// Test for function1()
-// You would need to write these even when using a framework
-void test_function1()
-{
-    IS_TRUE(function1(0));
-    IS_TRUE(!function1(5));
-    IS_TRUE(function1(10));
+void test_test() {
+  IS_TRUE(!greater_than_five(0));
+  IS_TRUE(!greater_than_five(5));
+  IS_TRUE(greater_than_five(10));
 }
 
 int main(void) {
-    // Call all tests. Using a test framework would simplify this.
-    test_function1();
+  test_test();
+  test_linkedlist();
 }

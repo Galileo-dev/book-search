@@ -1,26 +1,16 @@
-template <typename T>
-class Stack
-{
+template <typename T> class Stack {
 
 public:
-    T pop()
-    {
-        array_pointer--;
+  T pop() { array_pointer--; }
+  void push(T item) {
+    if (array_pointer >= sizeof(array)) {
+      return;
     }
-    void push(T item)
-    {
-        if (array_pointer >= sizeof(array))
-        {
-            return;
-        }
-        array[array_pointer] = item;
-    }
-    T peak()
-    {
-        return array[array_pointer];
-    }
+    array[array_pointer] = item;
+  }
+  T peak() { return array[array_pointer]; }
 
 private:
-    int array[10];
-    int array_pointer;
+  int array[10];
+  int array_pointer;
 };
