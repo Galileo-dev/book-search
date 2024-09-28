@@ -9,5 +9,6 @@
   }
 
 void test_linkedlist();
+void test_hashmap();
 
 #endif // TEST_DECLARATIONS_HPP

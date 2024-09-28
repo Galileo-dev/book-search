@@ -30,3 +30,5 @@ explain everything you include if you want to be credited for it!
 ##  Resources
 - **Hash Tables**  
     - [Open-sourcing F14 for faster, more memory-efficient hash tables](https://engineering.fb.com/2019/04/25/developer-tools/f14/)
+- **Inverted Index**
+    - [Inverted Index: a simple yet powerful data structure](https://evanxg852000.github.io/tutorial/rust/data/structure/2020/04/09/inverted-index-simple-yet-powerful-ds.html)

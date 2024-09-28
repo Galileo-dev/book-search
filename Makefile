@@ -2,7 +2,7 @@
 
 # tool macros
 CXX := g++
-CXXFLAGS := -Iinclude -Isrc
+CXXFLAGS := -Iinclude -Isrc -std=c++14
 DBGFLAGS := -g
 CCOBJFLAGS := $(CXXFLAGS) -c
 
