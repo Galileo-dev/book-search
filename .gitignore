@@ -1,3 +1,7 @@
 bin/
 debug/
 obj/
+
+# clangd
+.cache/
+compile_commands.json

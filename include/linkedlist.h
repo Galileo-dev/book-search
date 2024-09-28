@@ -10,7 +10,7 @@ class LinkedList
 public:
     LinkedList()
     {
-        head = NULL;
+        head = 0;
     }
 
     ~LinkedList()

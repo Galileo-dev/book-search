@@ -27,4 +27,6 @@ explain everything you include if you want to be credited for it!
 - **Space Complexity**: \( O(n) \), n is the number of unique terms across all documents
 - **Notes**: Scalability can be improved using compression techniques on the postings lists (e.g. encoding or delta encoding)
 
-
+##  Resources
+- **Hash Tables**  
+    - [Open-sourcing F14 for faster, more memory-efficient hash tables](https://engineering.fb.com/2019/04/25/developer-tools/f14/)

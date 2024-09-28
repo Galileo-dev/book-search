@@ -22,5 +22,5 @@ public:
 
 private:
     int array[10];
-    int array_pointer = 0;
+    int array_pointer;
 };
