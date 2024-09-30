@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <functional>
 #include <string>
+#include <vector>
 
 #define FNV_OFFSET 14695981039346656037UL
 #define FNV_PRIME 1099511628211UL
@@ -43,6 +44,19 @@ public:
       expand();
     }
     set_entry(std::move(key), std::move(value));
+  }
+
+  std::vector<K> keys() {
+    std::vector<K> key_list;
+    key_list.reserve(length);
+
+    for (const auto &entry : entries) {
+      if (entry.occupied) {
+        key_list.push_back(entry.key);
+      }
+    }
+
+    return key_list;
   }
 
 private:

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <vector>
 
 void test_basic_set_get() {
   HashMap<std::string, int> map;
@@ -16,6 +17,17 @@ void test_basic_set_get() {
   IS_TRUE(*map.get("key2") == 200);
 
   IS_TRUE(map.get("key3") == nullptr);
+}
+
+void test_keys() {
+  HashMap<std::string, int> map;
+  auto value1 = std::make_unique<int>(100);
+  auto value2 = std::make_unique<int>(200);
+
+  map.set("key1", std::move(value1));
+  map.set("key2", std::move(value2));
+  std::vector<std::string> expected = {"key1", "key2"};
+  IS_TRUE(map.keys() == expected);
 }
 
 void test_update_value() {
@@ -65,6 +77,7 @@ void test_collision_handling() {
 
 int test_hashmap() {
   test_basic_set_get();
+  test_keys();
   test_update_value();
   test_expand();
   test_collision_handling();
