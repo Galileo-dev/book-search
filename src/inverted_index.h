@@ -30,15 +30,15 @@ public:
           entry->set(count, std::make_unique<int>(1));
         }
       } else { // if term does not exist, create a new entry
-        HashMap<int, int> new_entry;
-        new_entry.set(count, std::make_unique<int>(1));
-        index.set(word, std::make_unique<HashMap<int, int>>(new_entry));
+        auto new_entry = std::make_unique<HashMap<int, int>>();
+        new_entry->set(count, std::make_unique<int>(1));
+        index.set(word, std::move(new_entry));
       }
     }
     return 0;
   }
 
-  std::vector<std::tuple<std::string, int>> search(std::string key) {
+  std::vector<std::pair<std::string, int>> search(std::string key) {
     // Convert key to lowercase
     std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 
@@ -55,7 +55,7 @@ public:
                 return freq_list->get(doc_a_id) < freq_list->get(doc_b_id);
               });
 
-    std::vector<std::tuple<std::string, int>> doc_names;
+    std::vector<std::pair<std::string, int>> doc_names;
     std::transform(doc_ids.begin(), doc_ids.end(),
                    std::back_inserter(doc_names), [&](int doc_id) {
                      auto name_it = docs.get(doc_id);
