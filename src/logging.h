@@ -21,10 +21,18 @@ public:
     if (logger._should_log()) {
       if (logger._log_level < LOG_ERROR) {
         // only include function signature if LOG_DBEUG
-        logger._output << "[" << logger._name << "]: " << msg << std::endl;
+        logger._output << "[" << logger._name << "]: " << msg;
       } else {
-        logger._output << msg << std::endl;
+        logger._output << msg;
       }
+    }
+    return logger;
+  }
+
+  friend Logger &operator<<(Logger &logger,
+                            std::ostream &(*manip)(std::ostream &)) {
+    if (logger._should_log()) {
+      logger._output << manip;
     }
     return logger;
   }
