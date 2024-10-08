@@ -27,4 +27,16 @@ int main(int argc, const char *argv[]) {
     log(LOG_INFO) << "Added document: " << base_filename << " Path: " << path
                   << std::endl;
   }
+
+  if (settings.search_term.has_value()) {
+    auto results = searchEngine.search(settings.search_term.value());
+
+    if (results.empty()) {
+      log(LOG_INFO) << "No such term found!" << std::endl;
+    }
+
+    for (const auto &result : results) {
+      log(LOG_INFO) << result.first << ", " << result.second << std::endl;
+    }
+  }
 }

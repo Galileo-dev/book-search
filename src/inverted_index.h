@@ -21,7 +21,7 @@ public:
       std::transform(word.begin(), word.end(), word.begin(), ::tolower);
 
       // find word
-      HashMap<int, int> *entry = index.get(word);
+      auto *entry = index.get(word);
       if (entry) {
         int *freq = entry->get(count);
         if (freq != nullptr) {
@@ -38,17 +38,30 @@ public:
     return 0;
   }
 
+  int add_document_from_file(std::string name, std::string path) {
+    // iterate by whitespace
+    std::ifstream file(path);
+    if (!file.is_open()) {
+      std::cerr << "Error adding document: " << std::strerror(errno)
+                << std::endl;
+      return 1;
+    }
+    int result = add_document(name, file);
+    file.close();
+    return result;
+  }
+
   std::vector<std::pair<std::string, int>> search(std::string key) {
     // Convert key to lowercase
     std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 
-    HashMap<int, int> *freq_list = index.get(key);
+    auto *freq_list = index.get(key);
     if (freq_list == nullptr) {
       return {};
     }
 
     // collect doc ids from frequency list
-    std::vector<int> doc_ids = freq_list->keys();
+    auto doc_ids = freq_list->keys();
 
     std::sort(doc_ids.begin(), doc_ids.end(),
               [&freq_list](int doc_a_id, int doc_b_id) {
@@ -72,19 +85,6 @@ public:
         doc_names.end());
 
     return doc_names;
-  }
-
-  int add_document_from_file(std::string name, std::string path) {
-    // iterate by whitespace
-    std::ifstream file(path);
-    if (!file.is_open()) {
-      std::cerr << "Error adding document: " << std::strerror(errno)
-                << std::endl;
-      return 1;
-    }
-    int result = add_document(name, file);
-    file.close();
-    return result;
   }
 
 private:
