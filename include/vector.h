@@ -2,6 +2,7 @@
 
 #include <cereal/types/array.hpp>
 #include <cereal/types/memory.hpp>
+
 #include <cstddef>
 #include <initializer_list>
 #include <ostream>
@@ -51,8 +52,11 @@ public:
   iterator end() { return _data + _size; }
   const_iterator begin() const { return _data; }
   const_iterator end() const { return _data + _size; }
-  template <class Archive> void serialize(Archive &archive) {
-    archive(_data, _capacity, _size);
+  template <class Archive> void serialize(Archive &ar) {
+    ar(_size, _capacity);
+    for (auto &v : *this) {
+      ar(v);
+    }
   }
 
   friend bool operator==(const Vector<T> &l, const Vector<T> &r) {
