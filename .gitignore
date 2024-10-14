@@ -5,3 +5,9 @@ obj/
 # clangd
 .cache/
 compile_commands.json
+
+# index
+index.json
+
+# dataset
+datasets/*

@@ -1,3 +1,8 @@
+#pragma once
+
+#include <cereal/types/memory.hpp>
+#include <cereal/types/string.hpp>
+#include <cereal/types/vector.hpp>
 #include <cstddef>
 #include <cstdlib>
 #include <functional>
@@ -59,6 +64,10 @@ public:
     return key_list;
   }
 
+  template <class Archive> void serialize(Archive &archive) {
+    archive(entries, capacity, length);
+  }
+
 private:
   static constexpr size_t INITIAL_CAPACITY = 16;
 
@@ -66,6 +75,10 @@ private:
     K key;
     std::unique_ptr<V> value;
     bool occupied = false;
+
+    template <class Archive> void serialize(Archive &ar) {
+      ar(key, value, occupied);
+    }
   };
 
   std::vector<Entry> entries; // Array of slots (std::vector manages capacity)
