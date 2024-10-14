@@ -42,6 +42,7 @@ explain everything you include if you want to be credited for it!
 - **Notes**: Space can be optimized using a "Radix tree" also known as a compressed trie.
 #### Relevence Ranking (TF-IDF with Cosine Similarity)
 - Relevance to the search query.
+- Filter out [**Stop Words**](https://github.com/stopwords-iso/stopwords-en)
 
 ## Usage
 ```

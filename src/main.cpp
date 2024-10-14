@@ -1,10 +1,14 @@
 #include "inverted_index.h"
 #include "logging.h"
 #include "settings.h"
+#include <cereal/archives/json.hpp>
 #include <iostream>
 #include <optional>
+#include <sstream>
 #include <string>
 #include <vector>
+
+#define DEFAULT_INDEX_PATH "./index.json"
 
 int main(int argc, const char *argv[]) {
   LOG_INIT_COUT();
@@ -12,7 +16,14 @@ int main(int argc, const char *argv[]) {
 
   CLISettings settings = parse_settings(argc, argv);
 
+  // load our index
   InvertedIndex searchEngine;
+
+  std::ifstream is(DEFAULT_INDEX_PATH);
+  if (is.is_open()) {
+    cereal::JSONInputArchive archive(is);
+    archive(searchEngine);
+  }
 
   if (settings.help) {
     usage(argv[0]);
@@ -39,4 +50,9 @@ int main(int argc, const char *argv[]) {
       log(LOG_INFO) << result.first << ", " << result.second << std::endl;
     }
   }
+
+  // save the index
+  std::ofstream os(DEFAULT_INDEX_PATH);
+  cereal::JSONOutputArchive archive(os);
+  archive(searchEngine);
 }

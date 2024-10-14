@@ -1,3 +1,5 @@
+#pragma once
+
 #include "hashtable.h"
 #include <cstddef>
 #include <fstream>
@@ -85,6 +87,10 @@ public:
         doc_names.end());
 
     return doc_names;
+  }
+
+  template <class Archive> void serialize(Archive &archive) {
+    archive(count, index, docs);
   }
 
 private:
