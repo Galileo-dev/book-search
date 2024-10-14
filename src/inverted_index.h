@@ -32,7 +32,7 @@ public:
           entry->set(count, std::make_unique<int>(1));
         }
       } else { // if term does not exist, create a new entry
-        auto new_entry = std::make_unique<HashMap<int, int>>();
+        auto new_entry = std::make_unique<HashTable<int, int>>();
         new_entry->set(count, std::make_unique<int>(1));
         index.set(word, std::move(new_entry));
       }
@@ -95,6 +95,6 @@ public:
 
 private:
   int count;
-  HashMap<int, std::string> docs;
-  HashMap<std::string, HashMap<int, int>> index;
+  HashTable<int, std::string> docs;
+  HashTable<std::string, HashTable<int, int>> index;
 };

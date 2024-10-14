@@ -13,5 +13,6 @@ void test_test() {
 int main(void) {
   test_test();
   test_linkedlist();
-  test_hashmap();
+  // test_hashtable();
+  test_vector();
 }
