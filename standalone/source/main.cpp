@@ -1,4 +1,4 @@
-#include "inverted_index.h"
+#include "booksearch/inverted_index.h"
 #include <cereal/archives/json.hpp>
 #include <cxxopts.hpp>
 #include <iostream>

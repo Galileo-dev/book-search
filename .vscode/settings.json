@@ -1,3 +1,10 @@
 {
-    "cmake.sourceDirectory": "${workspaceFolder}/all"
+    "cmake.sourceDirectory": "${workspaceFolder}/all",
+    "cmake.debugConfig": {
+        "type": "lldb",
+        "request": "launch",
+        "program": "${command:cmake.launchTargetPath}",
+        "args": [],
+        "cwd": "${workspaceFolder}"
+    }
 }
