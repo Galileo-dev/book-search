@@ -1,9 +1,10 @@
 #include "booksearch/vector.h"
+
 #include <doctest/doctest.h>
 
 TEST_CASE("Vector constructor") {
   Vector<int> vec;
-  CHECK(vec.begin() == vec.end()); // Empty
+  CHECK(vec.begin() == vec.end());  // Empty
 }
 
 TEST_CASE("Vector push_back") {

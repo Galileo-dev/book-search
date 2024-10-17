@@ -1,9 +1,12 @@
 #include "booksearch/hashtable.h"
-#include "booksearch/hash.h"
+
 #include <doctest/doctest.h>
+
 #include <iostream>
 #include <memory>
 #include <string>
+
+#include "booksearch/hash.h"
 
 TEST_CASE("HashTable basic set and get") {
   HashTable<std::string, int> map;

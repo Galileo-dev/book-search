@@ -1,5 +1,4 @@
 template <typename T> class Stack {
-
 public:
   T pop() { array_pointer--; }
   void push(T item) {

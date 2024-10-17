@@ -1,19 +1,19 @@
 #pragma once
 
-#include "vector.h"
+#include <memory.h>
+
 #include <cereal/types/memory.hpp>
 #include <cereal/types/string.hpp>
 #include <cstddef>
 #include <cstdlib>
 #include <functional>
-#include <memory.h>
 #include <string>
 
-template <typename K, typename V, typename Hash = std::hash<K>>
-class HashTable {
+#include "vector.h"
+
+template <typename K, typename V, typename Hash = std::hash<K>> class HashTable {
 public:
-  HashTable()
-      : entries(INITIAL_CAPACITY), capacity(INITIAL_CAPACITY), length(0) {}
+  HashTable() : entries(INITIAL_CAPACITY), capacity(INITIAL_CAPACITY), length(0) {}
 
   ~HashTable() = default;
 
@@ -21,11 +21,11 @@ public:
   V *get(const K &key) const {
     size_t index = hasher(key) & (capacity - 1);
 
-    while (entries[index].occupied) { // Check if the slot is occupied
+    while (entries[index].occupied) {  // Check if the slot is occupied
       if (entries[index].key == key) {
         return entries[index].value.get();
       }
-      index = (index + 1) & (capacity - 1); // end of array, wrap around.
+      index = (index + 1) & (capacity - 1);  // end of array, wrap around.
     }
     return nullptr;
   }
@@ -51,9 +51,7 @@ public:
     return key_list;
   }
 
-  template <class Archive> void serialize(Archive &archive) {
-    archive(entries, capacity, length);
-  }
+  template <class Archive> void serialize(Archive &archive) { archive(entries, capacity, length); }
 
 private:
   static constexpr size_t INITIAL_CAPACITY = 16;
@@ -63,14 +61,12 @@ private:
     std::unique_ptr<V> value;
     bool occupied = false;
 
-    template <class Archive> void serialize(Archive &ar) {
-      ar(key, value, occupied);
-    }
+    template <class Archive> void serialize(Archive &ar) { ar(key, value, occupied); }
   };
 
-  Vector<Entry> entries; // Array of slots
-  size_t capacity;       // size of _entries array
-  size_t length;         // number of items in hashtable
+  Vector<Entry> entries;  // Array of slots
+  size_t capacity;        // size of _entries array
+  size_t length;          // number of items in hashtable
   Hash hasher;
 
   // Expand hash table to twice its current size.
