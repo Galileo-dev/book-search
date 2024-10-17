@@ -44,6 +44,54 @@ explain everything you include if you want to be credited for it!
 - Relevance to the search query.
 - Filter out [**Stop Words**](https://github.com/stopwords-iso/stopwords-en)
 
+### Build and run the standalone target
+
+Use the following command to build and run the executable target.
+
+```bash
+cmake -S standalone -B build/standalone
+cmake --build build/standalone
+./build/standalone/BookSearch --help
+```
+
+### Build and run test suite
+
+Use the following commands from the project's root directory to run the test suite.
+
+```bash
+cmake -S test -B build/test
+cmake --build build/test
+CTEST_OUTPUT_ON_FAILURE=1 cmake --build build/test --target test
+
+# or simply call the executable: 
+./build/test/BookSearchTests
+```
+
+To collect code coverage information, run CMake with the `-DENABLE_TEST_COVERAGE=1` option.
+
+### Run clang-format
+
+Use the following commands from the project's root directory to check and fix C++ and CMake source style.
+This requires _clang-format_, _cmake-format_ and _pyyaml_ to be installed on the current system.
+
+```bash
+cmake -S test -B build/test
+
+# view changes
+cmake --build build/test --target format
+
+# apply changes
+cmake --build build/test --target fix-format
+```
+
+See [Format.cmake](https://github.com/TheLartians/Format.cmake) for details.
+These dependencies can be easily installed using pip.
+
+```bash
+pip install clang-format==14.0.6 cmake_format==0.6.11 pyyaml
+```
+
+
 ## Usage
 ```
 ./bin/main [options]
