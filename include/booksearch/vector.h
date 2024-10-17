@@ -11,10 +11,9 @@ public:
   using iterator = T *;
   using const_iterator = const T *;
 
-  Vector() : _size(0), _capacity(0), _data(nullptr) {}
-  Vector(int capacity) : _size(0), _capacity(capacity) {
-    _data = new T[_capacity];
-  }
+  Vector() : _data(0), _size(0), _capacity(0) {}
+  Vector(size_t capacity)
+      : _data(new T[capacity]), _size(0), _capacity(capacity) {}
   Vector(std::initializer_list<T> list) {
     _size = list.size();
     _capacity = _size;
@@ -25,17 +24,48 @@ public:
       _data[i++] = element;
     }
   }
+
+  Vector<T> &operator=(const Vector<T> &v) {
+    delete[] _data;
+    _size = v._size;
+    _capacity = v._capacity;
+    _data = new T[_size];
+    for (int i = 0; i < _size; i++)
+      _data[i] = v._data[i];
+    return *this;
+  }
+
   ~Vector() { delete[] _data; }
 
   void push_back(const T &value) {
-    if (_size == _capacity) {
-      resize(_capacity * 2);
+    if (_size >= _capacity) {
+      reserve(_capacity + 5);
     }
-    _data[_size] = value;
-    ++_size;
+    _data[_size++] = value;
   }
 
-  void reserve(int new_capacity) { resize(new_capacity); }
+  void reserve(int capacity) {
+    if (_data == 0) {
+      _size = 0;
+      _capacity = 0;
+    }
+    T *new_data = new T[capacity];
+
+    int l_Size = _capacity < _size ? _capacity : _size;
+
+    for (size_t i = 0; i < l_Size; ++i) {
+      new_data[i] = _data[i];
+    }
+
+    _capacity = capacity;
+    delete[] _data;
+    _data = new_data;
+  }
+
+  void resize(int size) {
+    reserve(size);
+    _size = size;
+  }
 
   T &operator[](size_t index) { return _data[index]; }
   const T &operator[](size_t index) const { return _data[index]; }
@@ -75,17 +105,4 @@ private:
   T *_data;
   size_t _size;
   size_t _capacity;
-
-  void resize(int new_capacity) {
-    T *new_data = new T[new_capacity];
-
-    for (size_t i = 0; i < _size; ++i) {
-      new_data[i] = _data[i];
-    }
-
-    delete[] _data;
-
-    _data = new_data;
-    _capacity = new_capacity;
-  }
 };

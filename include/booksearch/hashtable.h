@@ -13,7 +13,7 @@ template <typename K, typename V, typename Hash = std::hash<K>>
 class HashTable {
 public:
   HashTable()
-      : length(0), capacity(INITIAL_CAPACITY), entries(INITIAL_CAPACITY) {}
+      : entries(INITIAL_CAPACITY), capacity(INITIAL_CAPACITY), length(0) {}
 
   ~HashTable() = default;
 
