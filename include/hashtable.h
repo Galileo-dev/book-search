@@ -1,34 +1,21 @@
 #pragma once
 
+#include "vector.h"
 #include <cereal/types/memory.hpp>
 #include <cereal/types/string.hpp>
-#include <cereal/types/vector.hpp>
 #include <cstddef>
 #include <cstdlib>
 #include <functional>
+#include <memory.h>
 #include <string>
-#include <vector>
 
-#define FNV_OFFSET 14695981039346656037UL
-#define FNV_PRIME 1099511628211UL
-
-// Return 64-bit FNV-1a hash for key (NUL-terminated).
-// https://en.wikipedia.org/wiki/Fowler–Noll–Vo_hash_function
-static uint64_t hash_key(const std::string &key) {
-  uint64_t hash = FNV_OFFSET;
-  for (char c : key) {
-    hash ^= static_cast<uint64_t>(static_cast<unsigned char>(c));
-    hash *= FNV_PRIME;
-  }
-  return hash;
-}
-
-template <typename K, typename V, typename Hash = std::hash<K>> class HashMap {
+template <typename K, typename V, typename Hash = std::hash<K>>
+class HashTable {
 public:
-  HashMap()
+  HashTable()
       : length(0), capacity(INITIAL_CAPACITY), entries(INITIAL_CAPACITY) {}
 
-  ~HashMap() = default;
+  ~HashTable() = default;
 
   // Return a pointer to the value if found, otherwise nullptr.
   V *get(const K &key) const {
@@ -51,8 +38,8 @@ public:
     set_entry(std::move(key), std::move(value));
   }
 
-  std::vector<K> keys() {
-    std::vector<K> key_list;
+  Vector<K> keys() {
+    Vector<K> key_list;
     key_list.reserve(length);
 
     for (const auto &entry : entries) {
@@ -81,15 +68,15 @@ private:
     }
   };
 
-  std::vector<Entry> entries; // Array of slots (std::vector manages capacity)
-  size_t capacity;            // size of _entries array
-  size_t length;              // number of items in hashtable
+  Vector<Entry> entries; // Array of slots
+  size_t capacity;       // size of _entries array
+  size_t length;         // number of items in hashtable
   Hash hasher;
 
   // Expand hash table to twice its current size.
   void expand() {
     size_t new_capacity = capacity * 2;
-    std::vector<Entry> new_entries(new_capacity);
+    Vector<Entry> new_entries(new_capacity);
 
     for (auto &entry : entries) {
       if (entry.occupied) {
