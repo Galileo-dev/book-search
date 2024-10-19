@@ -1,4 +1,5 @@
-# adapted from: https://raw.githubusercontent.com/TheLartians/ModernCppStarter/refs/heads/master/all/CMakeLists.txt
+# adapted from:
+# https://raw.githubusercontent.com/TheLartians/ModernCppStarter/refs/heads/master/all/CMakeLists.txt
 # this script adds all subprojects to a single build to allow IDEs understand the full project
 # structure.
 

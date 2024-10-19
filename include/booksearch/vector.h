@@ -2,7 +2,6 @@
 
 #include <cereal/types/array.hpp>
 #include <cereal/types/memory.hpp>
-
 #include <cstddef>
 #include <initializer_list>
 #include <ostream>
@@ -12,8 +11,7 @@ public:
   using const_iterator = const T *;
 
   Vector() : _data(0), _size(0), _capacity(0) {}
-  Vector(size_t capacity)
-      : _data(new T[capacity]), _size(0), _capacity(capacity) {}
+  Vector(size_t capacity) : _data(new T[capacity]), _size(0), _capacity(capacity) {}
   Vector(std::initializer_list<T> list) {
     _size = list.size();
     _capacity = _size;
@@ -30,8 +28,7 @@ public:
     _size = v._size;
     _capacity = v._capacity;
     _data = new T[_size];
-    for (int i = 0; i < _size; i++)
-      _data[i] = v._data[i];
+    for (int i = 0; i < _size; i++) _data[i] = v._data[i];
     return *this;
   }
 
