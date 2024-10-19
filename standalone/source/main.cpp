@@ -47,16 +47,16 @@ int main(int argc, const char *argv[]) {
   }
 
   // Main commands
-  if (settings.count("document_path")) {
-    std::string document_path = settings["document_path"].as<std::string>();
+  if (settings.count("add")) {
+    std::string document_path = settings["add"].as<std::string>();
     std::string base_filename = document_path.substr(document_path.find_last_of("/\\") + 1);
 
     searchEngine.add_document_from_file(base_filename, document_path);
     spdlog::info("Added document: {}, Path: {}", base_filename, document_path);
   }
 
-  if (settings.count("search_term")) {
-    auto results = searchEngine.search(settings["search_term"].as<std::string>());
+  if (settings.count("search")) {
+    auto results = searchEngine.search(settings["search"].as<std::string>());
 
     if (results.empty()) {
       spdlog::info("No such term found!");
