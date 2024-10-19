@@ -57,9 +57,7 @@ file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/
 # ---- Create library ----
 
 # Note: for header-only libraries change all PUBLIC flags to INTERFACE and create an interface
-# target: add_library(${PROJECT_NAME} INTERFACE)
-# add_library(${PROJECT_NAME} ${headers} ${sources})
-
+# target: add_library(${PROJECT_NAME} INTERFACE) add_library(${PROJECT_NAME} ${headers} ${sources})
 
 add_library(${PROJECT_NAME} INTERFACE)
 
@@ -72,9 +70,8 @@ target_compile_options(${PROJECT_NAME} INTERFACE "$<$<COMPILE_LANG_AND_ID:CXX,MS
 target_link_libraries(${PROJECT_NAME} INTERFACE cereal::cereal spdlog::spdlog)
 
 target_include_directories(
-  ${PROJECT_NAME} INTERFACE 
-  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>      
-  $<INSTALL_INTERFACE:include/${PROJECT_NAME}-${PROJECT_VERSION}>
+  ${PROJECT_NAME} INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+                            $<INSTALL_INTERFACE:include/${PROJECT_NAME}-${PROJECT_VERSION}>
 )
 
 # ---- Create an installable target ----

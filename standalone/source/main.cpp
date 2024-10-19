@@ -1,19 +1,19 @@
-#include "booksearch/inverted_index.h"
+#include <spdlog/spdlog.h>
+
 #include <cereal/archives/json.hpp>
 #include <cxxopts.hpp>
 #include <iostream>
 #include <optional>
-#include <spdlog/spdlog.h>
 #include <sstream>
 #include <string>
 #include <vector>
 
+#include "booksearch/inverted_index.h"
+
 #define DEFAULT_INDEX_PATH "./index.json"
 
 int main(int argc, const char *argv[]) {
-
-  cxxopts::Options options(*argv,
-                           "A program to index and search your *Legal* books!");
+  cxxopts::Options options(*argv, "A program to index and search your *Legal* books!");
 
   std::string document_path;
   std::string search_term;
@@ -49,17 +49,14 @@ int main(int argc, const char *argv[]) {
   // Main commands
   if (settings.count("document_path")) {
     std::string document_path = settings["document_path"].as<std::string>();
-    std::string base_filename =
-        document_path.substr(document_path.find_last_of("/\\") + 1);
+    std::string base_filename = document_path.substr(document_path.find_last_of("/\\") + 1);
 
     searchEngine.add_document_from_file(base_filename, document_path);
     spdlog::info("Added document: {}, Path: {}", base_filename, document_path);
   }
 
   if (settings.count("search_term")) {
-
-    auto results =
-        searchEngine.search(settings["search_term"].as<std::string>());
+    auto results = searchEngine.search(settings["search_term"].as<std::string>());
 
     if (results.empty()) {
       spdlog::info("No such term found!");

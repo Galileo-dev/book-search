@@ -1,5 +1,6 @@
 
 #include "booksearch/linkedlist.h"
+
 #include <doctest/doctest.h>
 
 TEST_CASE("LinkedList constructor") { LinkedList<int> list; }

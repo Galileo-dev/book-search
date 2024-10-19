@@ -11,11 +11,9 @@ private:
     int left = 2 * index + 1;
     int right = 2 * index + 2;
 
-    if (left < heap.size() && heap[left] > heap[largest])
-      largest = left;
+    if (left < heap.size() && heap[left] > heap[largest]) largest = left;
 
-    if (right < heap.size() && heap[right] > heap[largest])
-      largest = right;
+    if (right < heap.size() && heap[right] > heap[largest]) largest = right;
 
     if (largest != index) {
       std::swap(heap[index], heap[largest]);
@@ -24,7 +22,6 @@ private:
   }
 
   void heapifyUp(int index) {
-
     int parent = (index - 1) / 2;
 
     if (index > 0 && heap[index] > heap[parent]) {
@@ -35,15 +32,13 @@ private:
 
 public:
   void insert(T value) {
-
     heap.push_back(value);
 
     heapifyUp(heap.size() - 1);
   }
 
   T extractMax() {
-    if (heap.size() == 0)
-      throw std::runtime_error("Heap is empty");
+    if (heap.size() == 0) throw std::runtime_error("Heap is empty");
 
     T root = heap[0];
 
