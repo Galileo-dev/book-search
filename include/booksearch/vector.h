@@ -23,12 +23,23 @@ public:
     }
   }
 
-  Vector<T> &operator=(const Vector<T> &v) {
-    delete[] _data;
-    _size = v._size;
-    _capacity = v._capacity;
-    _data = new T[_size];
-    for (int i = 0; i < _size; i++) _data[i] = v._data[i];
+  Vector(Vector &&other) noexcept
+      : _data(other._data), _size(other._size), _capacity(other._capacity) {
+    other._data = nullptr;
+    other._size = 0;
+    other._capacity = 0;
+  }
+
+  Vector &operator=(Vector &&other) noexcept {
+    if (this != &other) {
+      delete[] _data;
+      _data = other._data;
+      _size = other._size;
+      _capacity = other._capacity;
+      other._data = nullptr;
+      other._size = 0;
+      other._capacity = 0;
+    }
     return *this;
   }
 
@@ -36,27 +47,23 @@ public:
 
   void push_back(const T &value) {
     if (_size >= _capacity) {
-      reserve(_capacity + 5);
+      size_t new_capacity = (_capacity == 0) ? 1 : _capacity * 2;
+      reserve(new_capacity);
     }
     _data[_size++] = value;
   }
 
-  void reserve(int capacity) {
-    if (_data == 0) {
-      _size = 0;
-      _capacity = 0;
-    }
+  void reserve(size_t capacity) {
+    if (capacity <= _capacity) return;  // No need to reserve more
     T *new_data = new T[capacity];
 
-    int l_Size = _capacity < _size ? _capacity : _size;
-
-    for (size_t i = 0; i < l_Size; ++i) {
-      new_data[i] = _data[i];
+    for (size_t i = 0; i < _size; ++i) {
+      new_data[i] = std::move(_data[i]);  // Use move semantics if appropriate
     }
 
-    _capacity = capacity;
     delete[] _data;
     _data = new_data;
+    _capacity = capacity;
   }
 
   void resize(int size) {

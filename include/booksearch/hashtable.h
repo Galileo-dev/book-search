@@ -4,12 +4,15 @@
 
 #include <cereal/types/memory.hpp>
 #include <cereal/types/string.hpp>
+#include <cereal/types/vector.hpp>
 #include <cstddef>
 #include <cstdlib>
 #include <functional>
 #include <string>
 
-#include "vector.h"
+// #include "std::vector.h"
+
+#include <vector>
 
 template <typename K, typename V, typename Hash = std::hash<K>> class HashTable {
 public:
@@ -38,8 +41,8 @@ public:
     set_entry(std::move(key), std::move(value));
   }
 
-  Vector<K> keys() {
-    Vector<K> key_list;
+  std::vector<K> keys() {
+    std::vector<K> key_list;
     key_list.reserve(length);
 
     for (const auto &entry : entries) {
@@ -64,21 +67,21 @@ private:
     template <class Archive> void serialize(Archive &ar) { ar(key, value, occupied); }
   };
 
-  Vector<Entry> entries;  // Array of slots
-  size_t capacity;        // size of _entries array
-  size_t length;          // number of items in hashtable
+  std::vector<Entry> entries;  // Array of slots
+  size_t capacity;             // size of _entries array
+  size_t length;               // number of items in hashtable
   Hash hasher;
 
   // Expand hash table to twice its current size.
   void expand() {
     size_t new_capacity = capacity * 2;
-    Vector<Entry> new_entries(new_capacity);
+    std::vector<Entry> new_entries(new_capacity);
 
     for (auto &entry : entries) {
       if (entry.occupied) {
         size_t index = hasher(entry.key) & (new_capacity - 1);
         while (new_entries[index].occupied) {
-          index = (index + 1) & (capacity - 1);
+          index = (index + 1) & (new_capacity - 1);
         }
         new_entries[index] = std::move(entry);
       }
