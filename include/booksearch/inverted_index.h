@@ -7,10 +7,10 @@
 #include <sstream>
 #include <string>
 #include <tuple>
-#include <vector>
 
 #include "hashtable.h"
 #include "text_cleaner.h"
+#include "vector.h"
 class InvertedIndex {
 public:
   InvertedIndex(const TextCleaner &cleaner) : count(0), docs(), index(), cleaner(cleaner) {}
@@ -29,18 +29,20 @@ public:
     Doc doc;
     int freq;
 
+    SearchResult() {}
     SearchResult(const Doc &doc, const int &freq) : doc(doc), freq(freq) {}
   };
 
   int add_document(std::string name, std::istream &stream) {
     count++;  // increment document id
     docs.set(count, std::make_unique<Doc>(name, name));
-
+    int total_words = 0;
     std::string word;
     while (stream >> word) {
       word = cleaner.clean_word(word);
 
       if (!word.empty() && !cleaner.is_stop_word(word)) {
+        total_words++;
         // find word
         auto *entry = index.get(word);
         if (entry) {
@@ -57,6 +59,7 @@ public:
         }
       }
     }
+    doc_word_count.set(count, std::make_unique<int>(total_words));
     return 0;
   }
 
@@ -72,7 +75,7 @@ public:
     return result;
   }
 
-  std::vector<SearchResult> search(std::string key) {
+  Vector<SearchResult> search(std::string key) {
     // Convert key to lowercase
     std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 
@@ -84,11 +87,12 @@ public:
     // collect doc ids from frequency list
     auto doc_ids = freq_list->keys();
 
+    // Sort doc ids by frequency in descending order
     std::sort(doc_ids.begin(), doc_ids.end(), [&freq_list](int doc_a_id, int doc_b_id) {
-      return freq_list->get(doc_a_id) < freq_list->get(doc_b_id);
+      return *freq_list->get(doc_a_id) > *freq_list->get(doc_b_id);
     });
 
-    std::vector<SearchResult> results;
+    Vector<SearchResult> results;
     for (int doc_id : doc_ids) {
       auto doc_it = docs.get(doc_id);
       auto freq_it = freq_list->get(doc_id);
@@ -100,13 +104,14 @@ public:
     return results;
   }
 
-  std::vector<std::string> keys() { return index.keys(); }
+  Vector<std::string> keys() { return index.keys(); }
 
   template <class Archive> void serialize(Archive &archive) { archive(count, index, docs); }
 
 private:
   int count;
   HashTable<int, Doc> docs;
+  HashTable<int, int> doc_word_count;
   HashTable<std::string, HashTable<int, int>> index;
   const TextCleaner &cleaner;
 };

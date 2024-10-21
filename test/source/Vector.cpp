@@ -27,11 +27,14 @@ TEST_CASE("Vector push_back") {
 
 TEST_CASE("Vector reserve") {
   Vector<int> vec;
-  vec.reserve(100);
+  vec.push_back(10);
+  CHECK(vec[0] == 10);
 
   SUBCASE("Reserve and add") {
-    vec.push_back(10);
+    vec.reserve(10);
+    vec.push_back(20);
     CHECK(vec[0] == 10);
+    CHECK(vec[1] == 20);
   }
 }
 

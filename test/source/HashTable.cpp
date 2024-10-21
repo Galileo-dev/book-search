@@ -59,7 +59,9 @@ TEST_CASE("HashTable expansion") {
   }
 
   for (int i = 0; i < 9; ++i) {
-    CHECK(*map.get("key" + std::to_string(i)) == i);
+    auto result = map.get("key" + std::to_string(i));
+    CHECK(result != nullptr);
+    CHECK(*result == i);
   }
 
   CHECK(map.get("key0") != nullptr);

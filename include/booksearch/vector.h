@@ -11,7 +11,11 @@ public:
   using const_iterator = const T *;
 
   Vector() : _data(0), _size(0), _capacity(0) {}
-  Vector(size_t capacity) : _data(new T[capacity]), _size(0), _capacity(capacity) {}
+  Vector(size_t capacity) : _data(new T[capacity]), _size(capacity), _capacity(capacity) {
+    for (size_t i = 0; i < _size; ++i) {
+      _data[i] = T();
+    }
+  }
   Vector(std::initializer_list<T> list) {
     _size = list.size();
     _capacity = _size;
@@ -104,6 +108,10 @@ public:
     }
     return true;
   }
+
+  bool empty() const { return _size == 0; }
+  size_t size() const { return _size; }
+  size_t capacity() const { return _capacity; }
 
 private:
   T *_data;
