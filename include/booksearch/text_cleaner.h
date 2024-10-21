@@ -3,12 +3,11 @@
 #include <string>
 #include <unordered_set>
 
+#include "stopwords.h"
+
 class TextCleaner {
 public:
-  TextCleaner() {
-    // Initialize the set of stopwords
-    stop_words = {"the", "is", "at", "which", "on"};
-  }
+  TextCleaner() {}
 
   std::string clean_word(const std::string& word) const {
     std::string clean;
@@ -25,5 +24,4 @@ public:
   }
 
 private:
-  std::unordered_set<std::string> stop_words;  // Stop words set
 };
