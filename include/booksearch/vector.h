@@ -92,8 +92,13 @@ public:
   const_iterator end() const { return _data + _size; }
   template <class Archive> void serialize(Archive &ar) {
     ar(_size, _capacity);
-    for (auto &v : *this) {
-      ar(v);
+
+    if (Archive::is_loading::value) {
+      _data = new T[_capacity];
+    }
+
+    for (size_t i = 0; i < _size; ++i) {
+      ar(_data[i]);
     }
   }
 
