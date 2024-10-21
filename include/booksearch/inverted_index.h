@@ -10,32 +10,51 @@
 #include <vector>
 
 #include "hashtable.h"
+#include "text_cleaner.h"
 class InvertedIndex {
 public:
-  InvertedIndex() : count(0), docs(), index() {}
+  InvertedIndex(const TextCleaner &cleaner) : count(0), docs(), index(), cleaner(cleaner) {}
+
+  struct Doc {
+    std::string name;
+    std::string path;
+
+    Doc() {}
+    Doc(const std::string &name, const std::string &path) : name(name), path(path) {}
+
+    template <class Archive> void serialize(Archive &archive) { archive(name, path); }
+  };
+
+  struct SearchResult {
+    Doc doc;
+    int freq;
+
+    SearchResult(const Doc &doc, const int &freq) : doc(doc), freq(freq) {}
+  };
 
   int add_document(std::string name, std::istream &stream) {
     count++;  // increment document id
-    docs.set(count, std::make_unique<std::string>(name));
+    docs.set(count, std::make_unique<Doc>(name, name));
 
     std::string word;
     while (stream >> word) {
-      // Convert word to lowercase
-      std::transform(word.begin(), word.end(), word.begin(), ::tolower);
+      word = cleaner.clean_word(word);
 
-      // find word
-      auto *entry = index.get(word);
-      if (entry) {
-        int *freq = entry->get(count);
-        if (freq != nullptr) {
-          *freq += 1;
-        } else {
-          entry->set(count, std::make_unique<int>(1));
+      if (!word.empty() && !cleaner.is_stop_word(word)) {
+        // find word
+        auto *entry = index.get(word);
+        if (entry) {
+          int *freq = entry->get(count);
+          if (freq != nullptr) {
+            *freq += 1;
+          } else {
+            entry->set(count, std::make_unique<int>(1));
+          }
+        } else {  // if term does not exist, create a new entry
+          auto new_entry = std::make_unique<HashTable<int, int>>();
+          new_entry->set(count, std::make_unique<int>(1));
+          index.set(word, std::move(new_entry));
         }
-      } else {  // if term does not exist, create a new entry
-        auto new_entry = std::make_unique<HashTable<int, int>>();
-        new_entry->set(count, std::make_unique<int>(1));
-        index.set(word, std::move(new_entry));
       }
     }
     return 0;
@@ -53,7 +72,7 @@ public:
     return result;
   }
 
-  std::vector<std::pair<std::string, int>> search(std::string key) {
+  std::vector<SearchResult> search(std::string key) {
     // Convert key to lowercase
     std::transform(key.begin(), key.end(), key.begin(), ::tolower);
 
@@ -69,26 +88,25 @@ public:
       return freq_list->get(doc_a_id) < freq_list->get(doc_b_id);
     });
 
-    std::vector<std::pair<std::string, int>> doc_names;
-    std::transform(doc_ids.begin(), doc_ids.end(), std::back_inserter(doc_names), [&](int doc_id) {
-      auto name_it = docs.get(doc_id);
+    std::vector<SearchResult> results;
+    for (int doc_id : doc_ids) {
+      auto doc_it = docs.get(doc_id);
       auto freq_it = freq_list->get(doc_id);
-      return (name_it != nullptr && freq_it != nullptr)
-                 ? std::make_pair(*name_it, *freq_it)
-                 : std::make_pair("",
-                                  0);  // Return a default pair if not found
-    });
-    doc_names.erase(std::remove_if(doc_names.begin(), doc_names.end(),
-                                   [](const auto &pair) { return pair.first.empty(); }),
-                    doc_names.end());
-
-    return doc_names;
+      if (doc_it != nullptr) {
+        SearchResult result(*doc_it, *freq_it);
+        results.push_back(result);
+      }
+    }
+    return results;
   }
+
+  std::vector<std::string> keys() { return index.keys(); }
 
   template <class Archive> void serialize(Archive &archive) { archive(count, index, docs); }
 
 private:
   int count;
-  HashTable<int, std::string> docs;
+  HashTable<int, Doc> docs;
   HashTable<std::string, HashTable<int, int>> index;
+  const TextCleaner &cleaner;
 };

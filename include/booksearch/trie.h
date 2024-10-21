@@ -1,64 +1,66 @@
+#include <cereal/types/memory.hpp>
 #include <memory>
 #include <string>
 #include <vector>
-#define TRIE_ALPHABET_SIZE 26
+#define TRIE_ALPHABET_SIZE 36  // 26 Letters + 10 digits
 
 class Trie {
 public:
-  Trie() : root(new Node()) {}
+  Trie() : root(std::make_unique<Node>()) {}
 
   inline void insertKey(const std::string& key) {
-    Node* curr = root;
+    Node* curr = root.get();
 
     for (char c : key) {
-      if (curr->children[c - 'a'] == nullptr) {
-        curr->children[c - 'a'] = new Node();
+      int index = charToIndex(c);
+      if (!curr->children[index]) {
+        curr->children[index] = std::make_unique<Node>();
       }
-      curr = curr->children[c - 'a'];
+      curr = curr->children[index].get();
     }
     curr->is_leaf = true;
   }
 
   bool searchKey(const std::string& key) {
-    Node* curr = root;
+    Node* curr = root.get();
     for (char c : key) {
-      if (curr->children[c - 'a'] == nullptr) return false;
+      int index = charToIndex(c);
+      if (!curr->children[index]) return false;
 
-      curr = curr->children[c - 'a'];
+      curr = curr->children[index].get();
     }
     return curr->is_leaf;
   }
 
   std::vector<std::string> suggestWords(const std::string& key) {
     std::vector<std::string> results;
-    Node* curr = root;
+    Node* curr = root.get();
     std::string prefix = "";
     for (char c : key) {
-      if (curr->children[c - 'a'] == nullptr) {
+      int index = charToIndex(c);
+      if (!curr->children[index]) {
         break;
       }
       prefix += c;
-      curr = curr->children[c - 'a'];
+      curr = curr->children[index].get();
     }
     collectAllWords(curr, prefix, results);
 
     return results;
   }
 
+  template <class Archive> void serialize(Archive& archive) { archive(root); }
+
 private:
   struct Node {
-    char data;
-    Node* children[TRIE_ALPHABET_SIZE];
+    std::unique_ptr<Node> children[TRIE_ALPHABET_SIZE];
     bool is_leaf;
 
-    Node() : data('\0'), is_leaf(false) {
-      for (int i = 0; i < TRIE_ALPHABET_SIZE; i++) {
-        children[i] = nullptr;
-      }
-    }
+    Node() : is_leaf(false) {}
+    template <class Archive> void serialize(Archive& archive) { archive(children, is_leaf); }
   };
 
-  Node* root;
+  std::unique_ptr<Node> root;
 
   void collectAllWords(Node* node, std::string current_word, std::vector<std::string>& results) {
     if (node == nullptr) return;
@@ -69,9 +71,27 @@ private:
 
     for (int i = 0; i < TRIE_ALPHABET_SIZE; i++) {
       if (node->children[i] != nullptr) {
-        char next_char = 'a' + i;
-        collectAllWords(node->children[i], current_word + next_char, results);
+        char next_char = indexToChar(i);
+        collectAllWords(node->children[i].get(), current_word + next_char, results);
       }
     }
+  }
+
+  int charToIndex(char c) {
+    if (std::islower(c)) {
+      return c - 'a';  // 0 to 25
+    } else if (std::isdigit(c)) {
+      return 26 + (c - '0');  // 26 to 35
+    }
+    return -1;
+  }
+
+  char indexToChar(int index) {
+    if (index >= 0 && index < 26) {
+      return 'a' + index;  // a to z
+    } else if (index >= 26 && index < 36) {
+      return '0' + (index - 26);  // 0 to 9
+    }
+    return '\0';
   }
 };
