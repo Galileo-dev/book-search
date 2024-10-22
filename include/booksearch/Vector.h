@@ -27,6 +27,7 @@ public:
     }
   }
 
+  // Move constructor
   Vector(Vector &&other) noexcept
       : _data(other._data), _size(other._size), _capacity(other._capacity) {
     other._data = nullptr;
@@ -34,6 +35,37 @@ public:
     other._capacity = 0;
   }
 
+  // Copy constructor
+  Vector(const Vector &other) : _data(nullptr), _size(other._size), _capacity(other._capacity) {
+    if (_capacity > 0) {
+      _data = new T[_capacity];
+      for (size_t i = 0; i < _size; ++i) {
+        _data[i] = other._data[i];
+      }
+    }
+  }
+
+  // Copy assignment operator
+  Vector &operator=(const Vector &other) {
+    if (this != &other) {
+      delete[] _data;
+
+      _size = other._size;
+      _capacity = other._capacity;
+
+      if (_capacity > 0) {
+        _data = new T[_capacity];
+        for (size_t i = 0; i < _size; ++i) {
+          _data[i] = other._data[i];
+        }
+      } else {
+        _data = nullptr;
+      }
+    }
+    return *this;
+  }
+
+  // Move assignment operator
   Vector &operator=(Vector &&other) noexcept {
     if (this != &other) {
       delete[] _data;
@@ -58,11 +90,11 @@ public:
   }
 
   void reserve(size_t capacity) {
-    if (capacity <= _capacity) return;  // No need to reserve more
+    if (capacity <= _capacity) return;
     T *new_data = new T[capacity];
 
     for (size_t i = 0; i < _size; ++i) {
-      new_data[i] = std::move(_data[i]);  // Use move semantics if appropriate
+      new_data[i] = std::move(_data[i]);
     }
 
     delete[] _data;
