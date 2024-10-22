@@ -1,9 +1,10 @@
 #pragma once
 
+#include <booksearch/Vector.h>
+
 #include <cereal/types/memory.hpp>
 #include <memory>
 #include <string>
-#include <vector>
 
 #define TRIE_ALPHABET_SIZE 36  // 26 Letters + 10 digits
 
@@ -13,7 +14,7 @@ public:
 
   void insertKey(const std::string& key);
   bool searchKey(const std::string& key);
-  std::vector<std::string> suggestWords(const std::string& key);
+  Vector<std::string> suggestWords(const std::string& key);
 
   template <class Archive> void serialize(Archive& archive) { archive(root); }
 
@@ -28,7 +29,7 @@ private:
 
   std::unique_ptr<Node> root;
 
-  void collectAllWords(Node* node, std::string current_word, std::vector<std::string>& results);
+  void collectAllWords(Node* node, std::string current_word, Vector<std::string>& results);
   int charToIndex(char c);
   char indexToChar(int index);
 };

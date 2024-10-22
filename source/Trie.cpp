@@ -2,13 +2,10 @@
 
 #include <cctype>
 
-// Constructor
 Trie::Trie() : root(std::make_unique<Node>()) {}
 
-// Node Constructor
 Trie::Node::Node() : is_leaf(false) {}
 
-// Insert a key into the Trie
 void Trie::insertKey(const std::string& key) {
   Node* curr = root.get();
 
@@ -22,7 +19,6 @@ void Trie::insertKey(const std::string& key) {
   curr->is_leaf = true;
 }
 
-// Search for a key in the Trie
 bool Trie::searchKey(const std::string& key) {
   Node* curr = root.get();
   for (char c : key) {
@@ -34,9 +30,8 @@ bool Trie::searchKey(const std::string& key) {
   return curr->is_leaf;
 }
 
-// Suggest words based on a prefix
-std::vector<std::string> Trie::suggestWords(const std::string& key) {
-  std::vector<std::string> results;
+Vector<std::string> Trie::suggestWords(const std::string& key) {
+  Vector<std::string> results;
   Node* curr = root.get();
   std::string prefix = "";
 
@@ -53,9 +48,7 @@ std::vector<std::string> Trie::suggestWords(const std::string& key) {
   return results;
 }
 
-// Collect all words in the Trie
-void Trie::collectAllWords(Node* node, std::string current_word,
-                           std::vector<std::string>& results) {
+void Trie::collectAllWords(Node* node, std::string current_word, Vector<std::string>& results) {
   if (node == nullptr) return;
 
   if (node->is_leaf) {
@@ -70,7 +63,6 @@ void Trie::collectAllWords(Node* node, std::string current_word,
   }
 }
 
-// Convert character to Trie index
 int Trie::charToIndex(char c) {
   if (std::islower(c)) {
     return c - 'a';  // 0 to 25
@@ -80,7 +72,6 @@ int Trie::charToIndex(char c) {
   return -1;
 }
 
-// Convert Trie index back to character
 char Trie::indexToChar(int index) {
   if (index >= 0 && index < 26) {
     return 'a' + index;  // a to z

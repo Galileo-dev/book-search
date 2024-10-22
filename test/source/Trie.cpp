@@ -36,7 +36,7 @@ TEST_CASE("Trie suggestWords") {
     trie.insertKey("hell");
     trie.insertKey("help");
 
-    std::vector<std::string> suggestions = trie.suggestWords("hel");
+    Vector<std::string> suggestions = trie.suggestWords("hel");
     CHECK(suggestions.size() == 3);
     CHECK(suggestions[0] == "hell");
     CHECK(suggestions[1] == "hello");
