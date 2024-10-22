@@ -1,5 +1,6 @@
 # Book Search Engine
-## Group Name: 
+## Group
+Fionn Barrett: 22356355
 
 ## Table of Contents
 - [Project Assignment](#project-assignment)
@@ -40,6 +41,7 @@ explain everything you include if you want to be credited for it!
 - **Time Complexity**: Average case \( O(n) \) for insert and search.
 - **Space Complexity**: \( O(n) \), n is the number of keys.
 - **Notes**: Space can be optimized using a "Radix tree" also known as a compressed trie.
+
 #### Relevence Ranking (TF-IDF with Cosine Similarity)
 - Relevance to the search query.
 - Filter out [**Stop Words**](https://github.com/stopwords-iso/stopwords-en)
