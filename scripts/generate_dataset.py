@@ -29,10 +29,9 @@ def filter_books(catalog, author=None):
     logging.info("Filtering books...")
     return [
         row for row in catalog
-        if (author is None or author in row["Authors"])
-        and row["Language"] == "en"
+        if (row["Language"] == "en")
         and row["Type"] == "Text"
-    ]
+    ][0:100]
 
 def strip_headers(text):
     start_marker = re.escape(GUTENBERG_START_TEXT_MARKER)
@@ -53,7 +52,7 @@ def download_book(book, data_path, session):
             if response.status_code == 200:
                 text = response.text
                 clean_text = strip_headers(text)
-                file_path = data_path / f"{book_id}.txt"
+                file_path = data_path / f"{book_id} ({title}).txt"
                 with open(file_path, "w", encoding="utf-8") as f:
                     f.write(clean_text)
                 logging.info(f"Saved {title} to {file_path}")

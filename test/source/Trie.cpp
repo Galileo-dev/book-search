@@ -1,5 +1,5 @@
 
-#include "booksearch/trie.h"
+#include "booksearch/Trie.h"
 
 #include <doctest/doctest.h>
 

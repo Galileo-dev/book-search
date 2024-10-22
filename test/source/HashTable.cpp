@@ -1,4 +1,4 @@
-#include "booksearch/hashtable.h"
+#include "booksearch/HashTable.h"
 
 #include <doctest/doctest.h>
 
